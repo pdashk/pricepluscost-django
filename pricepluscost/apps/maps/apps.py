@@ -5,4 +5,4 @@ class MapsConfig(AppConfig):
     verbose_name = 'Mappings'
     
     def ready(self):
-        from maps.signals import backwards_mapping, status_updates, unique_choice
+        from maps.signals import status_updates, unique_choice
