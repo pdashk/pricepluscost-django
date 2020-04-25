@@ -23,7 +23,9 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'eia.apps.EIAConfig',
     'ccms.apps.CCMSConfig',
-    'bb.apps.BBConfig',
+    'estar.apps.EStarConfig',
+    'bestbuy.apps.BestbuyConfig',
+    'walmart.apps.WalmartConfig',
     'maps.apps.MapsConfig',
   #  'ppc.apps.PPCConfig',
     'django.contrib.admin',
