@@ -37,4 +37,9 @@ class ProductSpecAdmin(admin.ModelAdmin):
         )
 admin.site.register(ProductSpec, ProductSpecAdmin)
 
-admin.site.register(Manufacturer)
+class ManufacturerAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'name'
+        )
+admin.site.register(Manufacturer, ManufacturerAdmin)

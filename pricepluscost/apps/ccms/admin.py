@@ -3,6 +3,7 @@ from .models import ProductGroup, EfficiencyMetric, Model, BrandName
 
 class ProductGroupAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'name',
         'efficiency_metric'
     )
@@ -23,4 +24,9 @@ class ModelAdmin(admin.ModelAdmin):
     )
 admin.site.register(Model, ModelAdmin)
 
-admin.site.register(BrandName)
+class BrandNameAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'name'
+    )
+admin.site.register(BrandName, BrandNameAdmin)

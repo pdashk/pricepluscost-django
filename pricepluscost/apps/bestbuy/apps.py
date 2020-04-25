@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
-class BBConfig(AppConfig):
-    name = 'bb'
+class BestbuyConfig(AppConfig):
+    name = 'bestbuy'
     verbose_name = 'Bestbuy Download'

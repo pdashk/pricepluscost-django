@@ -1,9 +1,12 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation # added for reverse relation with 'maps' app
+from maps.models import CategoryMap, ProductBrand, Product # added for reverse relation with 'maps' app
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=200)
     category_id = models.CharField(max_length=200)
-
+    mapping = GenericRelation(CategoryMap, content_type_field='product_category_class', object_id_field='product_category_id') # added for reverse relation with 'maps' app
+    
     def __str__(self):
         return(self.name)
 
@@ -13,6 +16,7 @@ class ProductCategory(models.Model):
 
 class Manufacturer(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    mapping = GenericRelation(ProductBrand, content_type_field='brand_class', object_id_field='brand_id') # added for reverse relation with 'maps' app
 
     def __str__(self):
         return(self.name)
@@ -38,6 +42,7 @@ class Product(models.Model):
     image_thumbnail = models.TextField(verbose_name="Image Thumbnail URL", blank=True)
     energy_guide = models.TextField(verbose_name="Energy Guide Label URL", blank=True)
     download_date = models.DateTimeField(auto_now=True)
+    mapping = GenericRelation(Product, content_type_field='product_class', object_id_field='product_id') # added for reverse relation with 'maps' app
 
     def __str__(self):
         return(self.sku)
@@ -49,7 +54,7 @@ class Product(models.Model):
 # bestbuy api requires data not be stored for more than 3 days
 
 class ProductSpec(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     attribute = models.CharField(max_length=200)
     value = models.CharField(max_length=200)
 
