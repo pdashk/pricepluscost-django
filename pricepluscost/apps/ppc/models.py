@@ -106,22 +106,22 @@ class Item(models.Model):
         return(self.product_class.app_label)
 
     def has_affiliate_url(self):
-        return(self.affiliate_url is None)
+        return(self.affiliate_url is not '')
     has_affiliate_url.boolean = True
     has_affiliate_url.short_description = "Affiliate"
 
     def has_image_url(self):
-        return(self.image_url is None)
+        return(self.image_url is not '')
     has_image_url.boolean = True
     has_image_url.short_description = "Image"
 
     def has_image_thumbnail(self):
-        return(self.image_thumbnail is None)
+        return(self.image_thumbnail is not '')
     has_image_thumbnail.boolean = True
     has_image_thumbnail.short_description = "Thumbnail"
 
     def has_energy_guide(self):
-        return(self.energy_guide is None)
+        return(self.energy_guide is not '')
     has_energy_guide.boolean = True
     has_energy_guide.short_description = "Energy Guide"
 

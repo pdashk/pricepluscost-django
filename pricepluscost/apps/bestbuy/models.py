@@ -51,7 +51,7 @@ class Product(models.Model):
         return(self.sku)
 
     def affiliated(self):
-        return(self.affiliate_url is None)
+        return(self.affiliate_url is not '')
     affiliated.boolean = True
 
     def clean(self):
