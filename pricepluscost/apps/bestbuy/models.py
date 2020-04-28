@@ -1,11 +1,13 @@
 from django.db import models
-from django.contrib.contenttypes.fields import GenericRelation # added for reverse relation with 'maps' app
-from maps.models import CategoryMap, ProductBrand, Product # added for reverse relation with 'maps' app
+from django.contrib.contenttypes.fields import GenericRelation # added for reverse relation with other apps
+import maps.models # added for reverse relation with 'maps' app
+import ppc.models # added for reverse relation with 'ppcs' app
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=200)
     category_id = models.CharField(max_length=200)
-    mapping = GenericRelation(CategoryMap, content_type_field='product_category_class', object_id_field='product_category_id') # added for reverse relation with 'maps' app
+    maps = GenericRelation(maps.models.CategoryMap, content_type_field='product_category_class', object_id_field='product_category_id') # added for reverse relation with 'maps' app
+    ppc = GenericRelation(ppc.models.CategoryMap, content_type_field='product_category_class', object_id_field='product_category_id') # added for reverse relation with 'ppc' app
     
     def __str__(self):
         return(self.name)
@@ -16,7 +18,7 @@ class ProductCategory(models.Model):
 
 class Manufacturer(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    mapping = GenericRelation(ProductBrand, content_type_field='brand_class', object_id_field='brand_id') # added for reverse relation with 'maps' app
+    mapping = GenericRelation(maps.models.ProductBrand, content_type_field='brand_class', object_id_field='brand_id') # added for reverse relation with 'maps' app
 
     def __str__(self):
         return(self.name)
@@ -25,7 +27,7 @@ class Product(models.Model):
     product_category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     sku = models.CharField(verbose_name="SKU", max_length=100, unique=True)
     upc = models.IntegerField(verbose_name="UPC", unique=True, blank=True)
-    product_id = models.IntegerField(verbose_name="Product ID", blank=True)
+    product_id = models.IntegerField(verbose_name="Product ID", blank=True, null=True)
     name = models.CharField(max_length=500)
     model_number = models.CharField(max_length=200)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
@@ -42,7 +44,8 @@ class Product(models.Model):
     image_thumbnail = models.TextField(verbose_name="Image Thumbnail URL", blank=True)
     energy_guide = models.TextField(verbose_name="Energy Guide Label URL", blank=True)
     download_date = models.DateTimeField(auto_now=True)
-    mapping = GenericRelation(Product, content_type_field='product_class', object_id_field='product_id') # added for reverse relation with 'maps' app
+    maps = GenericRelation(maps.models.Product, content_type_field='product_class', object_id_field='product_id') # added for reverse relation with 'maps' app
+    ppc = GenericRelation(ppc.models.Item, content_type_field='product_class', object_id_field='product_id') # added for reverse relation with 'ppc' app
 
     def __str__(self):
         return(self.sku)
@@ -50,6 +53,9 @@ class Product(models.Model):
     def affiliated(self):
         return(self.affiliate_url is None)
     affiliated.boolean = True
+
+    def clean(self):
+        pass
 
 # bestbuy api requires data not be stored for more than 3 days
 
@@ -59,7 +65,7 @@ class ProductSpec(models.Model):
     value = models.CharField(max_length=200)
 
     def __str__(self):
-        return(str(self.product_id))
+        return(str(self.product))
     
     class Meta:
         verbose_name = 'Product Specification'

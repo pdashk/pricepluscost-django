@@ -1,13 +1,9 @@
 import os
 import sys
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(PROJECT_ROOT, 'apps'))
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'pdb(ax8*o7-fj=$h#pw8wvyxfsew9li=v@aj3+mr6($w^8l3^@'
@@ -17,9 +13,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-# Application definition
-
 INSTALLED_APPS = [
     'eia.apps.EIAConfig',
     'ccms.apps.CCMSConfig',
@@ -27,7 +20,7 @@ INSTALLED_APPS = [
     'bestbuy.apps.BestbuyConfig',
     'walmart.apps.WalmartConfig',
     'maps.apps.MapsConfig',
-  #  'ppc.apps.PPCConfig',
+    'ppc.apps.PPCConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +43,11 @@ ROOT_URLCONF = 'pricepluscost.urls'
 
 TEMPLATES = [
     {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': ['templates'],
+        'APP_DIRS': False,
+    },
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
@@ -63,9 +61,7 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'pricepluscost.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

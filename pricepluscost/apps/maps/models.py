@@ -6,10 +6,10 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 class CategoryMap(models.Model):
-    product_category_class = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name="product_category", help_text='This is the Django model class for a "category" from a product source app')
+    product_category_class = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name="product_category_maps", help_text='This is the Django model class for a "category" from a product source app')
     product_category_id = models.PositiveIntegerField(verbose_name="Product source id", help_text="This is the primary key of the category from the product source app")
     product_category_object = GenericForeignKey('product_category_class', 'product_category_id')
-    reference_category_class = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='reference_category', help_text='This is the Django model class for a "category" from a reference source app')
+    reference_category_class = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='reference_category_maps', help_text='This is the Django model class for a "category" from a reference source app')
     reference_category_id = models.PositiveIntegerField(verbose_name="Referecnce source id", help_text="This is the primary key of the category from the reference source app")
     reference_category_object = GenericForeignKey('reference_category_class', 'reference_category_id')
 
@@ -23,16 +23,10 @@ class CategoryMap(models.Model):
             raise ValidationError(_('Reference category id does not exist!'))
     
     def product_category_name(self):
-        try:
-            return(self.product_category_object.name)
-        except:
-            return(None)
+        return(self.product_category_object.name)
 
     def reference_category_name(self):
-        try:
-            return(self.reference_category_object.name)
-        except:
-            return(None)
+        return(self.reference_category_object.name)
 
     class Meta:
         verbose_name = 'Category Mapping'
