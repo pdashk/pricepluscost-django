@@ -1,9 +1,15 @@
 import os
 import sys
+from dotenv import load_dotenv
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) #removable in production
 PROJECT_ROOT = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(PROJECT_ROOT, 'apps'))
+
+load_dotenv()
+
+EIA_API_KEY = os.getenv("EIA_API_KEY")
+BESTBUY_API_KEY = os.getenv("BESTBUY_API_KEY")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'pdb(ax8*o7-fj=$h#pw8wvyxfsew9li=v@aj3+mr6($w^8l3^@'
@@ -44,8 +50,11 @@ ROOT_URLCONF = 'pricepluscost.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': ['templates'],
+        'DIRS': [os.path.join(PROJECT_ROOT, 'templates')],
         'APP_DIRS': False,
+        'OPTIONS': {
+            'environment': 'pricepluscost.jinja2.environment'
+            }
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -61,6 +70,7 @@ TEMPLATES = [
         },
     },
 ]
+
 WSGI_APPLICATION = 'pricepluscost.wsgi.application'
 
 # Database
@@ -111,3 +121,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, 'static'),
+]
+
