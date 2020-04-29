@@ -37,11 +37,19 @@ class CategoryMap(models.Model):
         verbose_name_plural = 'Mapping Product Categories'
         unique_together = ['product_category_class','product_category_id']
 
+class CategoryHoursOfUse(models.Model):
+    item_category = models.ForeignKey(ItemCategory, on_delete=models.CASCADE)
+    state = models.ForeignKey('eia.State', on_delete=models.CASCADE)
+    hou = models.FloatField(verbose_name="Daily Hours of Use")
+
+    class Meta:
+        unique_together = ['item_category','state']
+
 class Item(models.Model):
     product_class = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name="product_class_ppc", help_text='This is the Django model class for a product (model) from a product source app')
     product_id = models.PositiveIntegerField(verbose_name="Origin id", help_text="This is the primary key of model from the reference source app")
     product_object = GenericForeignKey('product_class', 'product_id')
-    item_category = models.ForeignKey(ItemCategory, on_delete=models.CASCADE)
+    item_category = models.ForeignKey(ItemCategory, on_delete=models.CASCADE, null=True)
     specs_table_class = models.ForeignKey(ContentType, on_delete=models.CASCADE, help_text='This is the Django model class for the specs of the source product.')
     
     sku = models.CharField(verbose_name="SKU", max_length=100, unique=True)
@@ -57,12 +65,6 @@ class Item(models.Model):
     affiliate_url = models.TextField(blank=True)
     regular_price = models.FloatField()
     sale_price = models.FloatField()
-
-    aec = models.FloatField()
-    regular_cost = models.FloatField()
-    sale_cost = models.FloatField()
-    regular_pricepluscost = models.FloatField(verbose_name="Regular PPC")
-    sale_pricepluscost = models.FloatField(verbose_name="Sale PPC")
 
     active = models.BooleanField(default=False)
     last_updated = models.DateTimeField(auto_now=True)
@@ -134,3 +136,27 @@ class Item(models.Model):
 # The only relation is to the product object so to delete the item if the product is deleted.
 # Specs table class will be referenced, so any of those attributes will update with the source also.
 # I now added a signal that will save this item whenever the source is saved, thereby updating! This must be hardcoded for each source.
+
+class ItemAEC(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    state = models.ForeignKey('eia.State', on_delete=models.CASCADE)
+    aec = models.FloatField(verbose_name="Annual Energy Consumption (kWh/yr)")
+
+    class Meta:
+        unique_together = ['item', 'state']
+
+class ItemRegularPPC(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    state = models.ForeignKey('eia.State', on_delete=models.CASCADE)
+    regular_ppc = models.FloatField(verbose_name="Regular Pricepluscost ($)")
+
+    class Meta:
+        unique_together = ['item', 'state']
+
+class ItemSalePPC(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    state = models.ForeignKey('eia.State', on_delete=models.CASCADE)
+    sale_ppc = models.FloatField(verbose_name="Sale Pricepluscost ($)")
+
+    class Meta:
+        unique_together = ['item', 'state']
