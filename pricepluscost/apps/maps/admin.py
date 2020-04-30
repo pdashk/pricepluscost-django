@@ -40,39 +40,6 @@ class ModelMapInline_1(admin.TabularInline):
             kwargs["queryset"] = ReferenceModel.objects.filter(model_class__app_label='ccms')
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-#### Inlines for Reference: ENERGY STAR
-class ManufacturerMapInline_2(admin.TabularInline):
-    model = ManufacturerMap
-    extra = 0
-    fk_name = 'product_brand'
-    verbose_name = 'Potential Mapping'
-    verbose_name_plural = 'Mappings to ENERGY STAR Brand'
-
-    def get_queryset(self, request):
-        qs = super(ManufacturerMapInline_2, self).get_queryset(request)
-        return qs.filter(reference_manufacturer__manufacturer_class__app_label='estar')
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "reference_manufacturer":
-            kwargs["queryset"] = ReferenceManufacturer.objects.filter(manufacturer_class__app_label='estar')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-class ModelMapInline_2(admin.TabularInline):
-    model = ModelMap
-    extra = 0
-    fk_name = 'product'
-    verbose_name = 'Potential Mapping'
-    verbose_name_plural = 'Mappings to ENERGY STAR Model'
-
-    def get_queryset(self, request):
-        qs = super(ModelMapInline_2, self).get_queryset(request)
-        return qs.filter(reference_model__model_class__app_label='estar')
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "reference_model":
-            kwargs["queryset"] = ReferenceModel.objects.filter(model_class__app_label='estar')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
 #####################################################################################################################
 #####################################################################################################################
 
@@ -138,7 +105,7 @@ class ProductBrandAdmin(admin.ModelAdmin):
         return(obj.name())
     name.short_description = "Name (from lookup)"
 
-    inlines = [ManufacturerMapInline_1, ManufacturerMapInline_2]
+    inlines = [ManufacturerMapInline_1]
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = [
@@ -172,7 +139,7 @@ class ProductAdmin(admin.ModelAdmin):
         return(obj.brand())
     brand.short_description = "Manufacturer or Brand (from lookup)"
 
-    inlines = [ModelMapInline_1, ModelMapInline_2]
+    inlines = [ModelMapInline_1]
 
 class ReferenceManufacturerAdmin(admin.ModelAdmin):
     list_display = [
