@@ -4,7 +4,6 @@ from .models import State
 
 from eia.utils.update import update_state_data
 
-
 class StateAdmin(admin.ModelAdmin):
     list_display = [
         'name',
@@ -19,7 +18,7 @@ class StateAdmin(admin.ModelAdmin):
 
     readonly_fields = ['last_updated']
 
-    actions = ['refresh_state_data', admin.actions.delete_selected]
+    actions = ['refresh_state_data']
 
     def refresh_state_data(self, request, queryset):
         
@@ -32,4 +31,3 @@ class StateAdmin(admin.ModelAdmin):
         self.message_user(request, f"Successfully refreshed {sum(updates)}/{len(updates)} selected states")
 
 admin.site.register(State, StateAdmin)
-admin.site.disable_action('delete_selected')
