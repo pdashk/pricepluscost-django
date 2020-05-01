@@ -1,6 +1,9 @@
 from string import ascii_uppercase
 from django.contrib import admin
+
 from .models import ProductGroup, Model, BrandName
+
+from .utils.update import update_model_data
 
 class BrandLetterListFilter(admin.SimpleListFilter):
     title = 'First Letter'
@@ -74,18 +77,32 @@ class ModelAdmin(admin.ModelAdmin):
         'product_group'
     ]
     ordering = ['-last_updated','ccms_oop',]
+
     readonly_fields = ['last_updated']
+
+    actions = ['refresh_model_data']
+
+    def refresh_model_data(self, request, queryset):
+        
+        updates = []
+
+        for obj in queryset:
+            update = update_model_data(obj)
+            updates.append(update)
+        
+        self.message_user(request, f"Successfully refreshed {sum(updates)}/{len(updates)} selected states")
 
 admin.site.register(Model, ModelAdmin)
 
 class BrandNameAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'name'
+        'name',
+        'created_date'
     )
     
-    ordering = ['name']
-    
+    ordering = ['created_date','name']
+    readonly_fields = ['created_date']
     list_filter = (BrandLetterListFilter,)
 
 admin.site.register(BrandName, BrandNameAdmin)

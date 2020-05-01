@@ -60,6 +60,7 @@ class ProductGroup(models.Model):
 
 class BrandName(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    created_date = models.DateTimeField(auto_now_add=True)
     mapping = GenericRelation(ReferenceManufacturer, content_type_field='manufacturer_class', object_id_field='manufacturer_id') # added for reverse relation with 'maps' app
 
     def __str__(self):
