@@ -1,7 +1,10 @@
 import requests
 from logzero import logger
+from django.conf import settings
 
-def get_all_monthly_res_series(API_KEY, verbose=False):
+API_KEY = settings.EIA_API_KEY
+
+def get_all_monthly_res_series(verbose=False):
     base_url = 'http://api.eia.gov/category/?api_key={API_KEY}&category_id={category_id}'
     category_id = '1012' # a different id will get other series that are not monthly residential
     query_url = base_url.format(API_KEY=API_KEY, category_id=category_id)
@@ -16,7 +19,7 @@ def get_all_monthly_res_series(API_KEY, verbose=False):
         err = r['data']['error']
         logger.warning(err)
 
-def get_rates_for_series(API_KEY, series_id, verbose=False):
+def get_rates_for_series(series_id, verbose=False):
     base_url = 'http://api.eia.gov/series/?api_key={API_KEY}&series_id={series_id}'
     query_url = base_url.format(API_KEY=API_KEY, series_id=series_id)
     r = requests.get(query_url).json()

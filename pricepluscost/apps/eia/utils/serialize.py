@@ -7,12 +7,12 @@ def _last_day_of_month(any_day):
     next_month = any_day.replace(day=28) + timedelta(days=4)
     return next_month - timedelta(days=next_month.day)
 
-def transform_series_data(EIA_API_KEY, series_id, **kwargs):
+def transform_series_data(series_id, **kwargs):
     '''
     Given API KEY and series id, downloads electricity rates and performs transformations for loading into eia app
     Output is list of dictionaries with arguments the same as model fields, except "name" and "series_id"
     '''
-    download = get_rates_for_series(EIA_API_KEY, series_id)
+    download = get_rates_for_series(series_id)
 
     rolling = download['data'][:12]
     rates = [r for [d,r] in rolling]

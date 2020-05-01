@@ -4,7 +4,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pricepluscost.settings")
 django.setup()
 
-from django.conf import settings
 from eia.models import State
 from eia.utils.upsert import upsert_series_data
 
@@ -67,8 +66,7 @@ def download_states(EIA_SERIES=EIA_SERIES):
     
     for series in tqdm.tqdm(EIA_SERIES):
     
-        loaded = upsert_series_data(
-            EIA_API_KEY=settings.EIA_API_KEY, 
+        loaded = upsert_series_data( 
             name=series[0],
             series_id=series[1]
             )
